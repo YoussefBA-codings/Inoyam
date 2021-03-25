@@ -1,0 +1,43 @@
+
+PupeeteerService est une classe qui permet en l'instenciant de créer un nouveau browser,
+elle contient deux fonctions : 
+- getBrowser qui est un getteur et qui permet de get le browser
+- getHtmlFromElement qui permet de récupperer le HTML de la pagé passé en 
+
+CineInKorea (le bot) contient :
+
+- checkSecurityOnSite qui determine si on doit cliquer sur le boutton pour valider le formulaire et avoir accés au site
+
+- getTheater qui permet de get le html de la salle de cinéma dont dURL est passé en parametre
+- getMoviesByTheater permet de get le html du film dont l'url est passé en parametre
+- setDateUrlToQueue qui permet de crée une queue d'url en se basant sur la date du film
+
+CheerioService est une classe qui permet de load le html avec le module cheerio pour ensuite pouvoir extraire les informations de l'html
+
+index.js c'est le fichier principal ou on récupere toutes les salle de cinemas  pour réccuperer ensuite les films de chaque cinéma et extraire leurs données : 
+- sur ce site il y a 18 chaines de cinema differentes ( regex qui traite tous les cas )
+- le resulta final est contenu dans la variable 'theaters'
+
+Pour lancer c'est tout simple : node index.js 
+
+
+sequelize model:create --attributes "city:string code_postal:integer publicationDate:date url:text publication_id:integer category:integer rooms:integer bedrooms:integer medias:json surface:float etage_bien:integer price:integer description:text seller_type:string" --name Immobilier
+
+sequelize model:create --attributes "firstname:string lastname:string email:string password:string" --name User
+
+				// city:string
+        // code_postal:integer
+        // publicationDate:date
+        // url:text
+        // publication_id:integer
+        // category:integer
+        // rooms:integer
+        // bedrooms:integer
+        // medias:json
+        // surface:float
+        // etage_bien:integer
+        // price:integer
+        // description:text
+        // seller_type:string
+
+  sequelize model:create --attributes "nom:string url:string annonceNumber:integer bddAnnonceNumber:integer" --name bot
