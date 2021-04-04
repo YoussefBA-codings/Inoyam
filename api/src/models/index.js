@@ -35,7 +35,7 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.init = (db) => {
-  return db.sequelize.sync({ force: true })
+  return db.sequelize.sync({ force: false })
     .then(async _ => {
       const user = await db.User.create({ email: 'admin@localhost', password: 'password' })
       console.log('Sync DB : OK')
