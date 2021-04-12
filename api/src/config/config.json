@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "mysql",
-    "password": "mysql",
+    "username": "covid",
+    "password": "1234",
     "database": "immo",
     "host": "localhost",
     "dialect": "mysql",

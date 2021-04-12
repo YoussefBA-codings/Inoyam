@@ -1,15 +1,12 @@
-const { User } = require('../../models');
+const { appUser } = require('../../models');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const privateKey = require('../../auth/private_key').private_key;
-const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 module.exports = (router) => {
-	router.route('/login')
+	router.route('/app/login')
 		.post(async (req, res) => {
 			// #swagger.tags = ['Login']
 			try {
-				const user = await User.findOne({ where: { email: req.body.email } });
+				const user = await appUser.findOne({ where: { email: req.body.email } });
 
 				if (user == null)
 					return res.status(404).json({ message: 'L\'utilisateur demandé n\'existe pas.' });
@@ -18,9 +15,19 @@ module.exports = (router) => {
 					if (!isPasswordValid)
 						return res.status(401).json({ message: 'Le mot de passe est incorrect.' });
 
-					const token = jwt.sign({ email: user.email }, privateKey, { expiresIn: '24h' });
-					return res.json({ message: 'L\'utilisateur a été connecté avec succès', data: user, token });
+					res.status(200).json({ message: 'success' });
 				});
+			} catch (err) {
+				res.status(500).json({ message: 'Une erreur est survenue. Veuillez réessayer plus tard.', data: err });
+			}
+		});
+
+	router.route('/app/signup')
+		.post(async (req, res) => {
+			// #swagger.tags = ['Login']
+			try {
+				const user = await appUser.create(req.body);
+				res.status(200).json({ message: `Le user "${user.firstname}" a bien été crée.` });
 			} catch (err) {
 				res.status(500).json({ message: 'Une erreur est survenue. Veuillez réessayer plus tard.', data: err });
 			}

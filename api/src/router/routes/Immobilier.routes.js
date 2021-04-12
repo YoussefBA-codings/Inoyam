@@ -3,6 +3,7 @@ const auth = require('../../auth/auth');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 const { ValidationError, UniqueConstraintError } = require('sequelize');
+const Tools = require('../tools.js');
 
 module.exports = (router) => {
 	/** COLLECTIONS OPPERATION */
@@ -10,10 +11,57 @@ module.exports = (router) => {
 		.get(async (req, res) => {
 			// #swagger.tags = ['Immobiliers']
 			try {
-				const immobiliers = await Immobilier.findAll();
+				const params = req.query;
+				const where  = {};
+
+				/*
+					Object.keys(params).forEach(key => {
+					const value = params[key];
+					let price, surface;
+					switch (key) {
+						case 'id_site_source': where.id_site_source = value; break;
+						case 'bedrooms': where.bedrooms = { [Op.eq]: value }; break;
+						case 'code_postal': where.code_postal = { [Op.eq]: value }; break;
+						case 'price':
+							price = {
+								min: value.min ? Number(value.min) : null,
+								max: value.max ? Number(value.max) : null
+							};
+							if (price.min < price.max) {
+								if (price.min && !price.max) where.price = { [Op.gt]: price.min };
+								else if (!price.min && price.max) where.price = { [Op.lt]: price.max };
+								else where.price = { [Op.between]: [price.min, price.max] };
+							} else if (price.min > price.max) {
+								return res.status(400).json({ message: 'Le prix minimun ne peut pas être suppérieur au prix maximum.' });
+							}
+							break;
+					}
+				});
+				*/
+				if (params.surface) {
+					const surface = {
+						min: params.surface.min ? Number(params.surface.min) : 0,
+						max: params.surface.max ? Number(params.surface.max) : 1000000000
+					};
+					if (surface.min < surface.max) {
+						if (surface.min && !surface.max) where.surface = { [Op.gt]: surface.min };
+						else if (!surface.min && surface.max) where.surface = { [Op.lt]: surface.max };
+						else where.surface = { [Op.between]: [surface.min, surface.max] };
+					} else if (surface.min > surface.max) {
+						return res.status(400).json({ message: 'La surface minimun ne peut pas être suppérieur à la surface maximum.' });
+					}
+				}
+
+				const options = {
+					where,
+					...Tools.pagination(params)
+				};
+
+				const immobiliers = await Immobilier.findAll(options);
 				// immobiliers.forEach(p => console.log(p.toJSON()));
 				res.json({ message: 'La liste des \'immobiliers\' a bien été récupérée.', data: immobiliers });
 			} catch (err) {
+				console.log(err);
 				res.status(500).json({ message: 'Une erreur est survenue. Veuillez réessayer plus tard.', data: err });
 			}
 		})
@@ -72,41 +120,6 @@ module.exports = (router) => {
 
 				const immobilier = await Immobilier.destroy({ where: { id: welcomToDelete.id } });
 				res.json({ message: 'Le \'immobilier\' demandé a bien été modifié.', data: immobilier });
-			} catch (err) {
-				res.status(500).json({ message: 'Une erreur est survenue. Veuillez réessayer plus tard.', data: err });
-			}
-		});
-
-	router.route('/filtre/immobilier')
-		.get(async (req, res) => {
-			try {
-				const body = req.body;
-				const filters  = {};
-				if (body.id_site_source) filters.id_site_source = body.id_site_source;
-				if (body.min_price && body.max_price) {
-					filters.price = {
-						[Op.between]: [body.min_price, body.max_price]
-					};
-				}
-				if (body.bedrooms) {
-					filters.bedrooms = {
-						[Op.eq]: body.bedrooms
-					};
-				}
-				if (body.code_postal.length > 0) {
-					filters.code_postal = {
-						[Op.in]: body.code_postal
-					};
-				}
-				if (body.min_surface) {
-					filters.surface = {
-						[Op.lt]: body.min_surface
-					};
-				}
-				const immobiliers = await Immobilier.findAll({
-					where: filters
-				});
-				res.json({ message: 'La liste des \'immobiliers\' a bien été récupérée.', data: immobiliers });
 			} catch (err) {
 				res.status(500).json({ message: 'Une erreur est survenue. Veuillez réessayer plus tard.', data: err });
 			}
