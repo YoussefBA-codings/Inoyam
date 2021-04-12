@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
 		email: DataTypes.STRING,
 		password: {
 			type: DataTypes.STRING,
-			allowNull: true,
+			allowNull: false,
 			set (value) {
 				const hash = bcrypt.hashSync(value, 10);
 				this.setDataValue('password', hash);

@@ -15,13 +15,26 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	}
 	appUser.init({
-		firstname: DataTypes.STRING,
-		lastname: DataTypes.STRING,
-		email: DataTypes.STRING,
-		adresse: DataTypes.TEXT,
+		firstname: {
+			allowNull: false,
+			type: DataTypes.STRING
+		},
+		lastname: {
+			allowNull: false,
+			type: DataTypes.STRING
+		},
+		email: {
+			type: DataTypes.STRING,
+			unique: true
+
+		},
+		adresse: {
+			type: DataTypes.TEXT,
+			allowNull: false
+		},
 		password: {
 			type: DataTypes.STRING,
-			allowNull: true,
+			allowNull: false,
 			set (value) {
 				const hash = bcrypt.hashSync(value, 10);
 				this.setDataValue('password', hash);
