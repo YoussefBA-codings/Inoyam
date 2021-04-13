@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
-		await queryInterface.createTable('userInfos', {
+		await queryInterface.createTable('userSimulations', {
 			id: {
 				allowNull: false,
 				autoIncrement: true,
@@ -56,6 +56,9 @@ module.exports = {
 			revenusLoc: {
 				type: Sequelize.FLOAT
 			},
+			result: {
+				type: Sequelize.FLOAT
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE
@@ -67,6 +70,6 @@ module.exports = {
 		});
 	},
 	down: async (queryInterface, Sequelize) => {
-		await queryInterface.dropTable('userInfos');
+		await queryInterface.dropTable('userSimulations');
 	}
 };

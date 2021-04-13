@@ -3,19 +3,19 @@ const {
 	Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-	class userInfo extends Model {
+	class userSimulation extends Model {
 		/**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
 		static associate (models) {
-			userInfo.hasOne(models.User, {
+			userSimulation.hasOne(models.User, {
 				onDelete: 'cascade'
 			});
 		}
 	}
-	userInfo.init({
+	userSimulation.init({
 		revenusEmp: {
 			type: DataTypes.FLOAT,
 			allowNull: false
@@ -79,10 +79,14 @@ module.exports = (sequelize, DataTypes) => {
 		revenusLoc: {
 			type: DataTypes.FLOAT,
 			allowNull: false
+		},
+		result: {
+			type: DataTypes.FLOAT,
+			allowNull: false
 		}
 	}, {
 		sequelize,
-		modelName: 'userInfo'
+		modelName: 'userSimulation'
 	});
-	return userInfo;
+	return userSimulation;
 };
